@@ -98,7 +98,12 @@ document.addEventListener('DOMContentLoaded', function() {
                 modalImage.src = photo.image;
                 modalImage.alt = `Photo ${photoId}`;
                 modalQuote.textContent = photo.quote;
+                
+                // Set location as clickable Google Maps link
+                const encodedLocation = encodeURIComponent(photo.location);
+                modalLocation.href = `https://www.google.com/maps/search/?api=1&query=${encodedLocation}`;
                 modalLocation.textContent = photo.location;
+                
                 modalDate.textContent = photo.date;
                 modalStory.innerHTML = `<p>${photo.story}</p>`;
 
