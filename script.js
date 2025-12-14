@@ -199,5 +199,46 @@ document.addEventListener('DOMContentLoaded', function() {
         item.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
         observer.observe(item);
     });
+
+    // Back to Top Button
+    const backToTopButton = document.getElementById('backToTop');
+    
+    if (backToTopButton) {
+        // Show/hide button based on scroll position
+        function toggleBackToTop() {
+            const scrollPosition = window.pageYOffset || document.documentElement.scrollTop;
+            const showThreshold = 300; // Show after scrolling 300px
+            
+            if (scrollPosition > showThreshold) {
+                backToTopButton.classList.add('visible');
+            } else {
+                backToTopButton.classList.remove('visible');
+            }
+        }
+
+        // Smooth scroll to top
+        backToTopButton.addEventListener('click', function(e) {
+            e.preventDefault();
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        });
+
+        // Keyboard support (Enter and Space)
+        backToTopButton.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                window.scrollTo({
+                    top: 0,
+                    behavior: 'smooth'
+                });
+            }
+        });
+
+        // Check scroll position on scroll and on load
+        window.addEventListener('scroll', toggleBackToTop);
+        toggleBackToTop(); // Check initial state
+    }
 });
 

@@ -811,6 +811,71 @@ h1, h2, h3 {
     color: var(--accent-amber);
 }
 
+/* Back to Top Button */
+.back-to-top {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+    margin: 2.5rem auto 0;
+    padding: 1rem 2rem;
+    background: transparent;
+    border: 1px solid rgba(201, 169, 97, 0.2);
+    border-radius: 30px;
+    color: var(--text-secondary);
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.9rem;
+    font-weight: 300;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(10px);
+    min-height: 44px;
+    position: relative;
+    z-index: 1;
+}
+
+.back-to-top.visible {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+.back-to-top:hover {
+    border-color: rgba(201, 169, 97, 0.4);
+    color: var(--accent-amber);
+    background: rgba(201, 169, 97, 0.05);
+    transform: translateY(-2px);
+}
+
+.back-to-top:focus {
+    outline: 2px solid rgba(201, 169, 97, 0.5);
+    outline-offset: 2px;
+    border-color: rgba(201, 169, 97, 0.4);
+    color: var(--accent-amber);
+}
+
+.back-to-top:active {
+    transform: translateY(0);
+}
+
+.back-to-top svg {
+    width: 18px;
+    height: 18px;
+    transition: transform 0.3s ease;
+}
+
+.back-to-top:hover svg {
+    transform: translateY(-2px);
+}
+
+.back-to-top span {
+    display: inline-block;
+}
+
 /* Responsive Design */
 
 /* Large Desktop (> 1024px) - Desktop styles are default, no changes needed */
@@ -1052,6 +1117,18 @@ h1, h2, h3 {
         text-align: center;
         gap: 1.5rem;
     }
+
+    .back-to-top {
+        margin-top: 2rem;
+        padding: 0.9rem 1.75rem;
+        font-size: 0.85rem;
+        min-height: 44px;
+    }
+
+    .back-to-top svg {
+        width: 16px;
+        height: 16px;
+    }
 }
 
 /* Mobile (≤ 480px) */
@@ -1281,6 +1358,20 @@ h1, h2, h3 {
 
     .footer-instagram {
         font-size: 0.9rem;
+    }
+
+    .back-to-top {
+        margin-top: 1.5rem;
+        padding: 0.85rem 1.5rem;
+        font-size: 0.8rem;
+        letter-spacing: 1px;
+        min-height: 44px;
+        gap: 0.6rem;
+    }
+
+    .back-to-top svg {
+        width: 16px;
+        height: 16px;
     }
 }
 
