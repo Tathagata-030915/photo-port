@@ -137,6 +137,10 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Close modal when clicking overlay
     modal.addEventListener('click', function(e) {
+        // Don't close if clicking on links or buttons inside modal-content
+        if (e.target.closest('.modal-content a') || e.target.closest('.modal-content button')) {
+            return;
+        }
         if (e.target === modal || e.target.classList.contains('modal-overlay')) {
             closeModal();
         }
@@ -152,17 +156,22 @@ document.addEventListener('DOMContentLoaded', function() {
     // Smooth scroll for navigation links
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
         anchor.addEventListener('click', function(e) {
-            e.preventDefault();
-            const target = document.querySelector(this.getAttribute('href'));
-            if (target) {
-                // Responsive offset based on screen size
-                const isMobile = window.innerWidth <= 768;
-                const offsetTop = target.offsetTop - (isMobile ? 70 : 80);
-                window.scrollTo({
-                    top: offsetTop,
-                    behavior: 'smooth'
-                });
+            // Only prevent default for actual anchor links (not external links like Google Maps)
+            const href = this.getAttribute('href');
+            if (href && href.startsWith('#')) {
+                e.preventDefault();
+                const target = document.querySelector(href);
+                if (target) {
+                    // Responsive offset based on screen size
+                    const isMobile = window.innerWidth <= 768;
+                    const offsetTop = target.offsetTop - (isMobile ? 70 : 80);
+                    window.scrollTo({
+                        top: offsetTop,
+                        behavior: 'smooth'
+                    });
+                }
             }
+            // If href doesn't start with "#", allow default behavior (e.g., Google Maps links)
         });
     });
 
