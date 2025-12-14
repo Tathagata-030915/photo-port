@@ -55,6 +55,37 @@ document.addEventListener('DOMContentLoaded', function() {
     const modalDate = document.getElementById('modalDate');
     const modalStory = document.getElementById('modalStory');
     const galleryItems = document.querySelectorAll('.gallery-item');
+    
+    // Mobile menu toggle
+    const mobileMenuToggle = document.getElementById('mobileMenuToggle');
+    const navMenu = document.getElementById('navMenu');
+    
+    if (mobileMenuToggle && navMenu) {
+        mobileMenuToggle.addEventListener('click', function() {
+            mobileMenuToggle.classList.toggle('active');
+            navMenu.classList.toggle('active');
+            document.body.style.overflow = navMenu.classList.contains('active') ? 'hidden' : '';
+        });
+        
+        // Close menu when clicking on a link
+        const navLinks = navMenu.querySelectorAll('a');
+        navLinks.forEach(link => {
+            link.addEventListener('click', function() {
+                mobileMenuToggle.classList.remove('active');
+                navMenu.classList.remove('active');
+                document.body.style.overflow = '';
+            });
+        });
+        
+        // Close menu when clicking outside
+        document.addEventListener('click', function(e) {
+            if (!navMenu.contains(e.target) && !mobileMenuToggle.contains(e.target)) {
+                mobileMenuToggle.classList.remove('active');
+                navMenu.classList.remove('active');
+                document.body.style.overflow = '';
+            }
+        });
+    }
 
     // Open modal when gallery item is clicked
     galleryItems.forEach(item => {
@@ -119,7 +150,9 @@ document.addEventListener('DOMContentLoaded', function() {
             e.preventDefault();
             const target = document.querySelector(this.getAttribute('href'));
             if (target) {
-                const offsetTop = target.offsetTop - 80;
+                // Responsive offset based on screen size
+                const isMobile = window.innerWidth <= 768;
+                const offsetTop = target.offsetTop - (isMobile ? 70 : 80);
                 window.scrollTo({
                     top: offsetTop,
                     behavior: 'smooth'
