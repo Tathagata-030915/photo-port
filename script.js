@@ -2,45 +2,45 @@
 const photoData = {
     1: {
         image: 'images/TAT-5349.jpg',
-        quote: '"In every moment, there is a story waiting to be told."',
-        location: 'Location Name',
-        date: 'Month Year',
-        story: 'This photograph captures a moment of quiet reflection. The interplay of light and shadow creates a sense of depth and emotion, inviting the viewer to pause and contemplate the beauty found in everyday moments.'
+        quote: '"Sometimes it\'s important to take a pause and rest to comprehend what is actually happening in this rapidly moving world where every human soul is competing with each other - never pausing to contemplate and understand the real meaning of life."',
+        location: 'Kolkata - Maidan, West Bengal, India',
+        date: '21st June 2024',
+        story: 'This photograph captures a moment of scilence and a subtle pause. The interplay of light and shadow creates a sense of depth and emotion, inviting the viewer to pause and contemplate the beauty found in everyday moments. I have tried to make the still cinematic, with warm tones in portions of highlights and cool tones in portions of shadows, creating a sense of depth and emotion and contrast.'
     },
     2: {
         image: 'images/TAT--14.jpg',
-        quote: '"Photography is the art of making memories tangible."',
-        location: 'Location Name',
-        date: 'Month Year',
-        story: 'Every frame tells a story, and this one speaks of the delicate balance between nature and human presence. The composition guides the eye through the scene, revealing details that might otherwise go unnoticed.'
+        quote: '"She carries the weight of the day with a silence louder than traffic."',
+        location: 'Kolkata - Maidan, West Bengal, India',
+        date: '21st June 2024',
+        story: 'Morning traffic roars past, impatient and unaware. She pauses between tasks, broom resting lightly in her hands, watching a city that rarely looks back. By the time the road forgets her presence, the dust will be gone, and the day will move on — cleaner, quieter, unchanged.'
     },
     3: {
         image: 'images/TAT-5354.jpg',
-        quote: '"The best camera is the one that\'s with you when inspiration strikes."',
-        location: 'Location Name',
-        date: 'Month Year',
-        story: 'Captured during golden hour, this image embodies the warmth and tranquility of the moment. The soft, diffused light creates an atmosphere that feels both timeless and immediate.'
+        quote: '"The city changes. The ride remains."',
+        location: 'Kolkata - Maidan, West Bengal, India',
+        date: '21st June 2024',
+        story: 'The Ambassador moves at its own pace, unbothered by urgency. While newer machines rush past, this one carries memory instead of speed — routes learned by habit, stories exchanged in silence, and a city that still trusts what has endured. Unfortunately, this symbol of heritage and aesthetic of Kolkata, now discontunued, slowly being forgotten, fading away into the past.'
     },
     4: {
         image: 'images/TAT-3.jpg',
-        quote: '"Photography is a way of feeling, of touching, of loving."',
-        location: 'Location Name',
-        date: 'Month Year',
-        story: 'This photograph represents the beauty found in simplicity. Through careful composition and attention to detail, ordinary subjects are transformed into something extraordinary.'
+        quote: '"Not every moment is meant to be seen. Some are meant to be carried."',
+        location: 'Kolkata - Esplanade, West Bengal, India',
+        date: '2nd January 2025',
+        story: 'Amid the cluttered noise of the street, he stands still for a moment that belongs only to him. Conversations pass, bodies move, transactions continue — but this pause remains untouched, heavy with years that don\'t need to be explained.'
     },
     5: {
         image: 'images/TAT-3_1.jpg',
-        quote: '"A photograph is memory in the raw."',
-        location: 'Location Name',
-        date: 'Month Year',
-        story: 'The story behind this image is one of patience and observation. Waiting for the perfect moment when all elements align—light, composition, and emotion—creates a photograph that resonates beyond the visual.'
+        quote: '"What was asked has already been heard. "',
+        location: 'Kolkata - Lake Kalibari, West Bengal, India',
+        date: '6th July 2025',
+        story: 'The flames are small, almost hesitant, but the smoke rises without doubt. Prayers have already been offered — some spoken, some left unfinished. What remains is not belief itself, but its trace, suspended briefly before the city absorbs it.'
     },
     6: {
         image: 'images/TAT-11.jpg',
-        quote: '"Photography takes an instant out of time, altering life by holding it still."',
-        location: 'Location Name',
-        date: 'Month Year',
-        story: 'This frame captures the essence of a fleeting moment, preserved forever through the lens. The details, the atmosphere, and the emotion all come together to tell a story that words alone cannot convey.'
+        quote: '"Some work is done with heat, not haste."',
+        location: 'Kolkata - Salt Lake, Karunamoyee, West Bengal, India',
+        date: '1st January 2025',
+        story: 'Steam lifts slowly as practiced hands move without hesitation. No instructions are needed here — only memory, rhythm, and attention shaped by repetition. In this small exchange of heat and care, the day is prepared one vessel at a time.'
     }
 };
 
