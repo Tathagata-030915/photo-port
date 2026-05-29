@@ -1413,3 +1413,395 @@ h1, h2, h3 {
     }
 }
 
+/* ============================
+   Projects Section
+   ============================ */
+.projects {
+    padding: 8rem 2rem;
+    background: linear-gradient(180deg, var(--charcoal-dark) 0%, var(--charcoal-base) 100%);
+    position: relative;
+}
+
+.projects-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+    gap: 2.5rem;
+    margin-top: 4rem;
+}
+
+/* --- Folder Card --- */
+.project-folder {
+    border-radius: 6px;
+    overflow: hidden;
+    cursor: pointer;
+    border: 1px solid rgba(201, 169, 97, 0.08);
+    transition: transform 0.35s ease, box-shadow 0.35s ease, border-color 0.35s ease;
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.55);
+    position: relative;
+}
+
+.project-folder:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 24px 60px rgba(0, 0, 0, 0.75);
+    border-color: rgba(201, 169, 97, 0.25);
+}
+
+.folder-cover {
+    position: relative;
+    aspect-ratio: 4 / 3;
+    overflow: hidden;
+}
+
+.folder-cover-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    filter: brightness(0.55) contrast(1.1) saturate(0.85);
+    transition: transform 0.6s ease, filter 0.4s ease;
+    display: block;
+}
+
+.project-folder:hover .folder-cover-img {
+    transform: scale(1.06);
+    filter: brightness(0.45) contrast(1.15) saturate(0.7);
+}
+
+.folder-cover-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+        to top,
+        rgba(10, 10, 10, 0.92) 0%,
+        rgba(10, 10, 10, 0.45) 50%,
+        transparent 100%
+    );
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: 2rem;
+    gap: 1.2rem;
+}
+
+.folder-meta {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.folder-tag {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.72rem;
+    font-weight: 400;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--accent-amber-muted);
+    opacity: 0.9;
+}
+
+.folder-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 2.4rem;
+    font-weight: 400;
+    color: var(--off-white);
+    letter-spacing: 2px;
+    line-height: 1.15;
+    margin: 0;
+}
+
+.folder-caption {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.05rem;
+    font-style: italic;
+    color: var(--text-secondary);
+    line-height: 1.7;
+    letter-spacing: 0.5px;
+    font-weight: 300;
+    margin: 0.3rem 0 0;
+}
+
+.folder-count {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.78rem;
+    font-weight: 300;
+    letter-spacing: 2px;
+    color: var(--text-muted);
+    text-transform: uppercase;
+}
+
+.folder-open-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    background: rgba(201, 169, 97, 0.1);
+    border: 1px solid rgba(201, 169, 97, 0.35);
+    color: var(--accent-amber);
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.8rem;
+    font-weight: 400;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    padding: 0.7rem 1.4rem;
+    border-radius: 30px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    width: fit-content;
+}
+
+.folder-open-btn:hover {
+    background: rgba(201, 169, 97, 0.2);
+    border-color: var(--accent-amber);
+    color: var(--off-white);
+    transform: translateX(4px);
+}
+
+.folder-open-btn svg {
+    transition: transform 0.3s ease;
+}
+
+.folder-open-btn:hover svg {
+    transform: translateX(4px);
+}
+
+/* ============================
+   Project Lightbox Panel
+   ============================ */
+.project-lightbox {
+    display: none;
+    position: fixed;
+    inset: 0;
+    z-index: 3000;
+    opacity: 0;
+    transition: opacity 0.35s ease;
+}
+
+.project-lightbox.active {
+    display: flex;
+    opacity: 1;
+}
+
+.lightbox-backdrop {
+    position: absolute;
+    inset: 0;
+    background: rgba(10, 10, 10, 0.92);
+    backdrop-filter: blur(14px);
+}
+
+.lightbox-panel {
+    position: relative;
+    z-index: 3001;
+    width: min(1200px, 95vw);
+    max-height: 92vh;
+    margin: auto;
+    background: var(--charcoal-base);
+    border: 1px solid rgba(201, 169, 97, 0.18);
+    border-radius: 8px;
+    box-shadow: 0 40px 100px rgba(0, 0, 0, 0.85);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    transform: translateY(30px) scale(0.97);
+    transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.35s ease;
+    opacity: 0;
+}
+
+.project-lightbox.active .lightbox-panel {
+    transform: translateY(0) scale(1);
+    opacity: 1;
+}
+
+/* Header */
+.lightbox-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1.8rem 2.2rem 1.4rem;
+    border-bottom: 1px solid rgba(201, 169, 97, 0.12);
+    flex-shrink: 0;
+}
+
+.lightbox-tag {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.7rem;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--accent-amber-muted);
+    display: block;
+    margin-bottom: 0.35rem;
+}
+
+.lightbox-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 2rem;
+    font-weight: 400;
+    color: var(--off-white);
+    letter-spacing: 2px;
+    margin: 0;
+}
+
+.lightbox-close {
+    width: 42px;
+    height: 42px;
+    background: rgba(26, 26, 26, 0.9);
+    border: 1px solid rgba(201, 169, 97, 0.25);
+    border-radius: 50%;
+    color: var(--text-primary);
+    font-size: 1.5rem;
+    font-family: 'Playfair Display', serif;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+    flex-shrink: 0;
+}
+
+.lightbox-close:hover {
+    background: rgba(201, 169, 97, 0.18);
+    border-color: var(--accent-amber-muted);
+    color: var(--accent-amber);
+    transform: rotate(90deg);
+}
+
+/* Image Grid inside lightbox */
+.lightbox-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 1rem;
+    padding: 1.8rem 2.2rem 2.2rem;
+    overflow-y: auto;
+    flex: 1;
+}
+
+.lightbox-grid::-webkit-scrollbar {
+    width: 4px;
+}
+
+.lightbox-grid::-webkit-scrollbar-track {
+    background: var(--charcoal-dark);
+}
+
+.lightbox-grid::-webkit-scrollbar-thumb {
+    background: rgba(201, 169, 97, 0.25);
+    border-radius: 2px;
+}
+
+.lightbox-item {
+    position: relative;
+    aspect-ratio: 1;
+    overflow: hidden;
+    border-radius: 4px;
+    cursor: pointer;
+    border: 1px solid rgba(201, 169, 97, 0.06);
+    transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+    box-shadow: 0 6px 24px rgba(0, 0, 0, 0.5);
+}
+
+.lightbox-item:hover {
+    transform: scale(1.03);
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.75);
+    border-color: rgba(201, 169, 97, 0.22);
+}
+
+.lightbox-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    filter: brightness(0.82) contrast(1.06);
+    transition: transform 0.5s ease, filter 0.3s ease;
+    display: block;
+}
+
+.lightbox-item:hover .lightbox-img {
+    transform: scale(1.08);
+    filter: brightness(0.9) contrast(1.1);
+}
+
+.lightbox-overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(10, 10, 10, 0.72);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    backdrop-filter: blur(2px);
+}
+
+.lightbox-item:hover .lightbox-overlay {
+    opacity: 1;
+}
+
+.lightbox-overlay span {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.1rem;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--off-white);
+    font-weight: 300;
+}
+
+/* Projects responsive */
+@media (max-width: 768px) {
+    .projects {
+        padding: 6rem 1.5rem;
+    }
+
+    .projects-grid {
+        grid-template-columns: 1fr;
+        gap: 2rem;
+        margin-top: 3rem;
+    }
+
+    .folder-title {
+        font-size: 2rem;
+    }
+
+    .folder-caption {
+        font-size: 0.95rem;
+    }
+
+    .lightbox-header {
+        padding: 1.4rem 1.5rem 1.1rem;
+    }
+
+    .lightbox-title {
+        font-size: 1.6rem;
+    }
+
+    .lightbox-grid {
+        grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+        gap: 0.75rem;
+        padding: 1.2rem 1.5rem 1.5rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .projects {
+        padding: 5rem 1rem;
+    }
+
+    .projects-grid {
+        margin-top: 2.5rem;
+    }
+
+    .folder-title {
+        font-size: 1.8rem;
+    }
+
+    .lightbox-panel {
+        width: 98vw;
+        max-height: 96vh;
+    }
+
+    .lightbox-header {
+        padding: 1.2rem 1.2rem 1rem;
+    }
+
+    .lightbox-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 0.6rem;
+        padding: 1rem 1.2rem 1.2rem;
+    }
+}
+

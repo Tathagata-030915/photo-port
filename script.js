@@ -256,3 +256,64 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 });
 
+// ============================
+// Project Folder Lightbox Logic
+// ============================
+document.addEventListener('DOMContentLoaded', function () {
+
+    // Generic opener: maps data-project on .project-folder → #lightbox-{id}
+    document.querySelectorAll('.project-folder').forEach(function (folder) {
+        folder.addEventListener('click', function () {
+            const projectId = folder.getAttribute('data-project');
+            const lightbox = document.getElementById('lightbox-' + projectId);
+            if (!lightbox) return;
+
+            lightbox.classList.remove('active');
+            void lightbox.offsetHeight; // force reflow
+
+            requestAnimationFrame(function () {
+                lightbox.style.display = 'flex';
+                void lightbox.offsetHeight;
+                lightbox.classList.add('active');
+                document.body.style.overflow = 'hidden';
+            });
+        });
+    });
+
+    // Generic closer
+    function closeLightbox(lightbox) {
+        lightbox.classList.remove('active');
+        setTimeout(function () {
+            lightbox.style.display = 'none';
+            document.body.style.overflow = '';
+        }, 350);
+    }
+
+    // Close buttons
+    document.querySelectorAll('.lightbox-close').forEach(function (btn) {
+        btn.addEventListener('click', function () {
+            const lightbox = btn.closest('.project-lightbox');
+            if (lightbox) closeLightbox(lightbox);
+        });
+    });
+
+    // Click on backdrop
+    document.querySelectorAll('.project-lightbox').forEach(function (lightbox) {
+        lightbox.addEventListener('click', function (e) {
+            if (e.target === lightbox || e.target.classList.contains('lightbox-backdrop')) {
+                closeLightbox(lightbox);
+            }
+        });
+    });
+
+    // Escape key
+    document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape') {
+            document.querySelectorAll('.project-lightbox.active').forEach(function (lightbox) {
+                closeLightbox(lightbox);
+            });
+        }
+    });
+});
+
+
