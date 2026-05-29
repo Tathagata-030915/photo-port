@@ -1470,7 +1470,7 @@ h1, h2, h3 {
 .folder-cover-overlay {
     position: relative;
     z-index: 1;
-    min-height: 420px;
+    min-height: 320px;
     background: linear-gradient(
         to top,
         rgba(10, 10, 10, 0.97) 0%,
