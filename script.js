@@ -306,7 +306,7 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     });
 
-    // Escape key
+    // Escape key — close lightbox (viewer takes priority via its own handler below)
     document.addEventListener('keydown', function (e) {
         if (e.key === 'Escape') {
             document.querySelectorAll('.project-lightbox.active').forEach(function (lightbox) {
@@ -316,4 +316,92 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 });
 
+// ============================
+// Project Image Viewer Logic
+// ============================
+document.addEventListener('DOMContentLoaded', function () {
+    const viewer      = document.getElementById('projViewer');
+    const viewerImg   = document.getElementById('projViewerImg');
+    const viewerClose = document.getElementById('projViewerClose');
+    const viewerPrev  = document.getElementById('projViewerPrev');
+    const viewerNext  = document.getElementById('projViewerNext');
+    const viewerCounter = document.getElementById('projViewerCounter');
+    const backdrop    = document.getElementById('projViewerBackdrop');
 
+    let images = [];   // array of { src, alt } for the active lightbox
+    let current = 0;
+
+    function openViewer(imgList, index) {
+        images  = imgList;
+        current = index;
+        showImage();
+
+        viewer.classList.remove('active');
+        void viewer.offsetHeight;
+        viewer.style.display = 'flex';
+        void viewer.offsetHeight;
+        viewer.classList.add('active');
+        document.body.style.overflow = 'hidden';
+    }
+
+    function showImage() {
+        viewerImg.style.opacity = '0';
+        viewerImg.style.transform = 'scale(0.96)';
+
+        setTimeout(function () {
+            viewerImg.src = images[current].src;
+            viewerImg.alt = images[current].alt;
+            viewerCounter.textContent = (current + 1) + ' / ' + images.length;
+
+            viewerPrev.disabled = current === 0;
+            viewerNext.disabled = current === images.length - 1;
+
+            viewerImg.style.opacity = '1';
+            viewerImg.style.transform = 'scale(1)';
+            viewerImg.style.transition = 'opacity 0.3s ease, transform 0.3s ease';
+        }, 80);
+    }
+
+    function closeViewer() {
+        viewer.classList.remove('active');
+        setTimeout(function () {
+            viewer.style.display = 'none';
+            viewerImg.src = '';
+            document.body.style.overflow = 'hidden'; // keep lightbox scroll lock
+        }, 350);
+    }
+
+    // Attach click to every lightbox-item in every project lightbox
+    document.querySelectorAll('.project-lightbox').forEach(function (lightbox) {
+        lightbox.querySelectorAll('.lightbox-item').forEach(function (item, idx, all) {
+            item.addEventListener('click', function (e) {
+                e.stopPropagation(); // don't bubble to lightbox backdrop close
+                const imgList = Array.from(all).map(function (el) {
+                    const img = el.querySelector('.lightbox-img');
+                    return { src: img.src, alt: img.alt };
+                });
+                openViewer(imgList, idx);
+            });
+        });
+    });
+
+    // Controls
+    viewerClose.addEventListener('click', closeViewer);
+    backdrop.addEventListener('click', closeViewer);
+
+    viewerPrev.addEventListener('click', function () {
+        if (current > 0) { current--; showImage(); }
+    });
+
+    viewerNext.addEventListener('click', function () {
+        if (current < images.length - 1) { current++; showImage(); }
+    });
+
+    // Keyboard navigation
+    document.addEventListener('keydown', function (e) {
+        if (!viewer.classList.contains('active')) return;
+        if (e.key === 'Escape')      { closeViewer(); }
+        if (e.key === 'ArrowLeft'  && current > 0)                  { current--; showImage(); }
+        if (e.key === 'ArrowRight' && current < images.length - 1)  { current++; showImage(); }
+    });
+});

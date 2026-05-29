@@ -210,6 +210,22 @@
         </div>
     </div>
 
+    <!-- Project Image Viewer -->
+    <div class="proj-viewer" id="projViewer">
+        <div class="proj-viewer-backdrop" id="projViewerBackdrop"></div>
+        <button class="proj-viewer-close" id="projViewerClose" aria-label="Close">&times;</button>
+        <button class="proj-viewer-nav proj-viewer-prev" id="projViewerPrev" aria-label="Previous">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M15 18l-6-6 6-6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <div class="proj-viewer-img-wrap">
+            <img src="" alt="" id="projViewerImg" class="proj-viewer-img">
+        </div>
+        <button class="proj-viewer-nav proj-viewer-next" id="projViewerNext" aria-label="Next">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M9 18l6-6-6-6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <span class="proj-viewer-counter" id="projViewerCounter"></span>
+    </div>
+
     <!-- Photo Modal -->
     <div class="modal" id="photoModal">
         <div class="modal-overlay"></div>
