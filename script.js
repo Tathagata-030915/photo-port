@@ -44,30 +44,30 @@ const photoData = {
     }
 };
 
-// Initialize modal functionality
+// ============================
+// Gallery Modal
+// ============================
 document.addEventListener('DOMContentLoaded', function() {
     const modal = document.getElementById('photoModal');
     const modalClose = document.getElementById('modalClose');
     const modalImage = document.getElementById('modalImage');
-    const modalInfo = document.querySelector('.modal-info');
     const modalQuote = document.getElementById('modalQuote');
     const modalLocation = document.getElementById('modalLocation');
     const modalDate = document.getElementById('modalDate');
     const modalStory = document.getElementById('modalStory');
     const galleryItems = document.querySelectorAll('.gallery-item');
-    
+
     // Mobile menu toggle
     const mobileMenuToggle = document.getElementById('mobileMenuToggle');
     const navMenu = document.getElementById('navMenu');
-    
+
     if (mobileMenuToggle && navMenu) {
         mobileMenuToggle.addEventListener('click', function() {
             mobileMenuToggle.classList.toggle('active');
             navMenu.classList.toggle('active');
             document.body.style.overflow = navMenu.classList.contains('active') ? 'hidden' : '';
         });
-        
-        // Close menu when clicking on a link
+
         const navLinks = navMenu.querySelectorAll('a');
         navLinks.forEach(link => {
             link.addEventListener('click', function() {
@@ -76,8 +76,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 document.body.style.overflow = '';
             });
         });
-        
-        // Close menu when clicking outside
+
         document.addEventListener('click', function(e) {
             if (!navMenu.contains(e.target) && !mobileMenuToggle.contains(e.target)) {
                 mobileMenuToggle.classList.remove('active');
@@ -87,33 +86,26 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // Open modal when gallery item is clicked
+    // Open gallery modal
     galleryItems.forEach(item => {
         item.addEventListener('click', function() {
             const photoId = this.getAttribute('data-photo-id');
             const photo = photoData[photoId];
 
             if (photo) {
-                // Set content first
                 modalImage.src = photo.image;
                 modalImage.alt = `Photo ${photoId}`;
                 modalQuote.textContent = photo.quote;
-                
-                // Set location as clickable Google Maps link
+
                 const encodedLocation = encodeURIComponent(photo.location);
                 modalLocation.href = `https://www.google.com/maps/search/?api=1&query=${encodedLocation}`;
                 modalLocation.textContent = photo.location;
-                
+
                 modalDate.textContent = photo.date;
                 modalStory.innerHTML = `<p>${photo.story}</p>`;
 
-                // Remove active class if it exists (for reset)
                 modal.classList.remove('active');
-                
-                // Force reflow to ensure reset is applied
                 void modal.offsetHeight;
-                
-                // Show modal and trigger animations
                 requestAnimationFrame(() => {
                     modal.classList.add('active');
                     document.body.style.overflow = 'hidden';
@@ -122,81 +114,46 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 
-    // Close modal with fade-out animation
     function closeModal() {
-        // Remove active class to trigger fade-out
         modal.classList.remove('active');
-        
-        // Reset body overflow after animation completes
-        setTimeout(() => {
-            document.body.style.overflow = '';
-        }, 300);
+        setTimeout(() => { document.body.style.overflow = ''; }, 300);
     }
 
     modalClose.addEventListener('click', closeModal);
 
-    // Close modal when clicking overlay
     modal.addEventListener('click', function(e) {
-        // Don't close if clicking on links or buttons inside modal-content
-        if (e.target.closest('.modal-content a') || e.target.closest('.modal-content button')) {
-            return;
-        }
-        if (e.target === modal || e.target.classList.contains('modal-overlay')) {
-            closeModal();
-        }
+        if (e.target.closest('.modal-content a') || e.target.closest('.modal-content button')) return;
+        if (e.target === modal || e.target.classList.contains('modal-overlay')) closeModal();
     });
 
-    // Close modal with Escape key
     document.addEventListener('keydown', function(e) {
-        if (e.key === 'Escape' && modal.classList.contains('active')) {
-            closeModal();
-        }
+        if (e.key === 'Escape' && modal.classList.contains('active')) closeModal();
     });
 
-    // Smooth scroll for navigation links
+    // Smooth scroll
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
         anchor.addEventListener('click', function(e) {
-            // Only prevent default for actual anchor links (not external links like Google Maps)
             const href = this.getAttribute('href');
             if (href && href.startsWith('#')) {
                 e.preventDefault();
                 const target = document.querySelector(href);
                 if (target) {
-                    // Responsive offset based on screen size
                     const isMobile = window.innerWidth <= 768;
-                    const offsetTop = target.offsetTop - (isMobile ? 70 : 80);
-                    window.scrollTo({
-                        top: offsetTop,
-                        behavior: 'smooth'
-                    });
+                    window.scrollTo({ top: target.offsetTop - (isMobile ? 70 : 80), behavior: 'smooth' });
                 }
             }
-            // If href doesn't start with "#", allow default behavior (e.g., Google Maps links)
         });
     });
 
     // Navbar scroll effect
-    let lastScroll = 0;
     const navbar = document.querySelector('.navbar');
-
     window.addEventListener('scroll', function() {
-        const currentScroll = window.pageYOffset;
-
-        if (currentScroll > 100) {
-            navbar.style.boxShadow = '0 2px 20px rgba(0, 0, 0, 0.1)';
-        } else {
-            navbar.style.boxShadow = '0 2px 20px rgba(0, 0, 0, 0.05)';
-        }
-
-        lastScroll = currentScroll;
+        navbar.style.boxShadow = window.pageYOffset > 100
+            ? '0 2px 20px rgba(0,0,0,0.1)'
+            : '0 2px 20px rgba(0,0,0,0.05)';
     });
 
-    // Fade in animation on scroll
-    const observerOptions = {
-        threshold: 0.1,
-        rootMargin: '0px 0px -50px 0px'
-    };
-
+    // Intersection observer fade-in
     const observer = new IntersectionObserver(function(entries) {
         entries.forEach(entry => {
             if (entry.isIntersecting) {
@@ -204,9 +161,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 entry.target.style.transform = 'translateY(0)';
             }
         });
-    }, observerOptions);
+    }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
 
-    // Observe gallery items and gear items
     document.querySelectorAll('.gallery-item, .gear-item').forEach(item => {
         item.style.opacity = '0';
         item.style.transform = 'translateY(30px)';
@@ -214,45 +170,25 @@ document.addEventListener('DOMContentLoaded', function() {
         observer.observe(item);
     });
 
-    // Back to Top Button
+    // Back to top
     const backToTopButton = document.getElementById('backToTop');
-    
     if (backToTopButton) {
-        // Show/hide button based on scroll position
         function toggleBackToTop() {
-            const scrollPosition = window.pageYOffset || document.documentElement.scrollTop;
-            const showThreshold = 300; // Show after scrolling 300px
-            
-            if (scrollPosition > showThreshold) {
-                backToTopButton.classList.add('visible');
-            } else {
-                backToTopButton.classList.remove('visible');
-            }
+            const pos = window.pageYOffset || document.documentElement.scrollTop;
+            backToTopButton.classList.toggle('visible', pos > 300);
         }
-
-        // Smooth scroll to top
         backToTopButton.addEventListener('click', function(e) {
             e.preventDefault();
-            window.scrollTo({
-                top: 0,
-                behavior: 'smooth'
-            });
+            window.scrollTo({ top: 0, behavior: 'smooth' });
         });
-
-        // Keyboard support (Enter and Space)
         backToTopButton.addEventListener('keydown', function(e) {
             if (e.key === 'Enter' || e.key === ' ') {
                 e.preventDefault();
-                window.scrollTo({
-                    top: 0,
-                    behavior: 'smooth'
-                });
+                window.scrollTo({ top: 0, behavior: 'smooth' });
             }
         });
-
-        // Check scroll position on scroll and on load
         window.addEventListener('scroll', toggleBackToTop);
-        toggleBackToTop(); // Check initial state
+        toggleBackToTop();
     }
 });
 
@@ -261,26 +197,21 @@ document.addEventListener('DOMContentLoaded', function() {
 // ============================
 document.addEventListener('DOMContentLoaded', function () {
 
-    // Generic opener: maps data-project on .project-folder → #lightbox-{id}
+    // Open: click on .project-folder opens #lightbox-{data-project}
     document.querySelectorAll('.project-folder').forEach(function (folder) {
         folder.addEventListener('click', function () {
             const projectId = folder.getAttribute('data-project');
             const lightbox = document.getElementById('lightbox-' + projectId);
             if (!lightbox) return;
 
-            lightbox.classList.remove('active');
-            void lightbox.offsetHeight; // force reflow
-
-            requestAnimationFrame(function () {
-                lightbox.style.display = 'flex';
-                void lightbox.offsetHeight;
-                lightbox.classList.add('active');
-                document.body.style.overflow = 'hidden';
-            });
+            lightbox.style.display = 'flex';
+            void lightbox.offsetHeight; // force reflow so transition fires
+            lightbox.classList.add('active');
+            document.body.style.overflow = 'hidden';
         });
     });
 
-    // Generic closer
+    // Close a lightbox panel
     function closeLightbox(lightbox) {
         lightbox.classList.remove('active');
         setTimeout(function () {
@@ -289,7 +220,7 @@ document.addEventListener('DOMContentLoaded', function () {
         }, 350);
     }
 
-    // Close buttons
+    // Close button inside each lightbox
     document.querySelectorAll('.lightbox-close').forEach(function (btn) {
         btn.addEventListener('click', function () {
             const lightbox = btn.closest('.project-lightbox');
@@ -297,7 +228,7 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     });
 
-    // Click on backdrop
+    // Click backdrop to close
     document.querySelectorAll('.project-lightbox').forEach(function (lightbox) {
         lightbox.addEventListener('click', function (e) {
             if (e.target === lightbox || e.target.classList.contains('lightbox-backdrop')) {
@@ -306,77 +237,81 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     });
 
-    // Escape key — close lightbox (viewer takes priority via its own handler below)
+    // Escape closes lightbox only if viewer is NOT open
     document.addEventListener('keydown', function (e) {
         if (e.key === 'Escape') {
-            document.querySelectorAll('.project-lightbox.active').forEach(function (lightbox) {
-                closeLightbox(lightbox);
-            });
+            const viewer = document.getElementById('projViewer');
+            if (viewer && viewer.classList.contains('active')) return; // viewer handles its own Escape
+            document.querySelectorAll('.project-lightbox.active').forEach(closeLightbox);
         }
     });
 });
 
 // ============================
-// Project Image Viewer Logic
+// Project Image Viewer
+// (opens when a photo inside a lightbox grid is clicked)
 // ============================
 document.addEventListener('DOMContentLoaded', function () {
-    const viewer      = document.getElementById('projViewer');
-    const viewerImg   = document.getElementById('projViewerImg');
-    const viewerClose = document.getElementById('projViewerClose');
-    const viewerPrev  = document.getElementById('projViewerPrev');
-    const viewerNext  = document.getElementById('projViewerNext');
+    const viewer        = document.getElementById('projViewer');
+    const viewerImg     = document.getElementById('projViewerImg');
+    const viewerClose   = document.getElementById('projViewerClose');
+    const viewerPrev    = document.getElementById('projViewerPrev');
+    const viewerNext    = document.getElementById('projViewerNext');
     const viewerCounter = document.getElementById('projViewerCounter');
-    const backdrop    = document.getElementById('projViewerBackdrop');
+    const backdrop      = document.getElementById('projViewerBackdrop');
 
-    let images = [];   // array of { src, alt } for the active lightbox
+    let images  = [];
     let current = 0;
 
+    // Update nav button states + counter
+    function updateNav() {
+        viewerPrev.disabled = (current === 0);
+        viewerNext.disabled = (current === images.length - 1);
+        viewerCounter.textContent = (current + 1) + ' / ' + images.length;
+    }
+
+    // Cross-fade to a new image src
+    function fadeImage(src, alt) {
+        viewerImg.style.transition = 'opacity 0.18s ease';
+        viewerImg.style.opacity = '0';
+        setTimeout(function () {
+            viewerImg.src = src;
+            viewerImg.alt = alt;
+            viewerImg.style.transition = 'opacity 0.3s ease';
+            viewerImg.style.opacity = '1';
+        }, 200);
+    }
+
+    // Open viewer at a specific index within an image list
     function openViewer(imgList, index) {
         images  = imgList;
         current = index;
-        showImage();
 
-        viewer.classList.remove('active');
-        void viewer.offsetHeight;
-        viewer.style.display = 'flex';
-        void viewer.offsetHeight;
+        // Load image first with no transition
+        viewerImg.style.transition = 'none';
+        viewerImg.style.opacity    = '1';
+        viewerImg.src = images[current].src;
+        viewerImg.alt = images[current].alt;
+        updateNav();
+
+        // Adding .active triggers the CSS opacity/visibility transition
         viewer.classList.add('active');
         document.body.style.overflow = 'hidden';
     }
 
-    function showImage() {
-        viewerImg.style.opacity = '0';
-        viewerImg.style.transform = 'scale(0.96)';
-
-        setTimeout(function () {
-            viewerImg.src = images[current].src;
-            viewerImg.alt = images[current].alt;
-            viewerCounter.textContent = (current + 1) + ' / ' + images.length;
-
-            viewerPrev.disabled = current === 0;
-            viewerNext.disabled = current === images.length - 1;
-
-            viewerImg.style.opacity = '1';
-            viewerImg.style.transform = 'scale(1)';
-            viewerImg.style.transition = 'opacity 0.3s ease, transform 0.3s ease';
-        }, 80);
-    }
-
+    // Close viewer — lightbox stays open underneath
     function closeViewer() {
         viewer.classList.remove('active');
-        setTimeout(function () {
-            viewer.style.display = 'none';
-            viewerImg.src = '';
-            document.body.style.overflow = 'hidden'; // keep lightbox scroll lock
-        }, 350);
+        // body stays overflow:hidden because lightbox is still open
     }
 
-    // Attach click to every lightbox-item in every project lightbox
+    // Wire every lightbox-item inside every project-lightbox
     document.querySelectorAll('.project-lightbox').forEach(function (lightbox) {
-        lightbox.querySelectorAll('.lightbox-item').forEach(function (item, idx, all) {
+        const items = lightbox.querySelectorAll('.lightbox-item');
+        items.forEach(function (item, idx) {
             item.addEventListener('click', function (e) {
-                e.stopPropagation(); // don't bubble to lightbox backdrop close
-                const imgList = Array.from(all).map(function (el) {
+                e.stopPropagation(); // stop backdrop-close from firing
+                const imgList = Array.from(items).map(function (el) {
                     const img = el.querySelector('.lightbox-img');
                     return { src: img.src, alt: img.alt };
                 });
@@ -390,18 +325,34 @@ document.addEventListener('DOMContentLoaded', function () {
     backdrop.addEventListener('click', closeViewer);
 
     viewerPrev.addEventListener('click', function () {
-        if (current > 0) { current--; showImage(); }
+        if (current > 0) {
+            current--;
+            updateNav();
+            fadeImage(images[current].src, images[current].alt);
+        }
     });
 
     viewerNext.addEventListener('click', function () {
-        if (current < images.length - 1) { current++; showImage(); }
+        if (current < images.length - 1) {
+            current++;
+            updateNav();
+            fadeImage(images[current].src, images[current].alt);
+        }
     });
 
-    // Keyboard navigation
+    // Keyboard: Escape closes viewer, arrows navigate
     document.addEventListener('keydown', function (e) {
         if (!viewer.classList.contains('active')) return;
-        if (e.key === 'Escape')      { closeViewer(); }
-        if (e.key === 'ArrowLeft'  && current > 0)                  { current--; showImage(); }
-        if (e.key === 'ArrowRight' && current < images.length - 1)  { current++; showImage(); }
+        if (e.key === 'Escape') {
+            closeViewer();
+        } else if (e.key === 'ArrowLeft' && current > 0) {
+            current--;
+            updateNav();
+            fadeImage(images[current].src, images[current].alt);
+        } else if (e.key === 'ArrowRight' && current < images.length - 1) {
+            current++;
+            updateNav();
+            fadeImage(images[current].src, images[current].alt);
+        }
     });
 });
