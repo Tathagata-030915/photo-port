@@ -356,3 +356,95 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     });
 });
+
+// ============================
+// Visitor Counter
+// ============================
+(function initVisitorCounter() {
+    var NAMESPACE   = 'photo-port-tathagata';
+    var KEY         = 'visitors';
+    var SEED        = 5;          // starting count (represents visits before this feature)
+    var LS_KEY      = 'vc_local'; // localStorage fallback key
+    var display     = document.getElementById('visitorCountDisplay');
+
+    if (!display) return;
+
+    // Animate the number rolling up from 0 → target
+    function animateCount(target) {
+        var start    = 0;
+        var duration = 1200; // ms
+        var startTs  = null;
+
+        // Use easeOutExpo for a premium feel
+        function easeOutExpo(t) {
+            return t === 1 ? 1 : 1 - Math.pow(2, -10 * t);
+        }
+
+        function step(ts) {
+            if (!startTs) startTs = ts;
+            var progress = Math.min((ts - startTs) / duration, 1);
+            var current  = Math.floor(easeOutExpo(progress) * target);
+            display.textContent = current.toLocaleString();
+            display.classList.add('counting');
+
+            if (progress < 1) {
+                requestAnimationFrame(step);
+            } else {
+                display.textContent = target.toLocaleString();
+                display.classList.remove('counting');
+            }
+        }
+
+        requestAnimationFrame(step);
+    }
+
+    // localStorage fallback: increment locally and show that value
+    function localFallback() {
+        var stored = parseInt(localStorage.getItem(LS_KEY), 10);
+        var count  = isNaN(stored) ? SEED : stored + 1;
+        localStorage.setItem(LS_KEY, count);
+        animateCount(count);
+    }
+
+    // --- Primary path: CountAPI ---
+    // Step 1: try to SET the initial seed (will only work once; subsequent calls no-op or fail gracefully)
+    // Step 2: hit the counter endpoint to increment + retrieve the live count.
+    //
+    // CountAPI free tier: https://api.countapi.xyz
+    // We use /set to seed on first-ever call, then /hit for every page load.
+    // If the namespace+key already exists the /set call will return an error which we ignore.
+
+    var baseUrl  = 'https://api.countapi.xyz';
+    var hitUrl   = baseUrl + '/hit/' + NAMESPACE + '/' + KEY;
+    var setUrl   = baseUrl + '/set/' + NAMESPACE + '/' + KEY + '?value=' + SEED;
+
+    // Try to hit the counter directly (fastest path for returning visitors)
+    fetch(hitUrl, { mode: 'cors' })
+        .then(function (res) { return res.json(); })
+        .then(function (data) {
+            if (data && typeof data.value === 'number') {
+                animateCount(data.value);
+                localStorage.setItem(LS_KEY, data.value); // keep local in sync
+            } else {
+                localFallback();
+            }
+        })
+        .catch(function () {
+            // CountAPI unavailable — seed it first, then try again; else fall back to local
+            fetch(setUrl, { mode: 'cors' })
+                .then(function (r) { return r.json(); })
+                .then(function () {
+                    return fetch(hitUrl, { mode: 'cors' });
+                })
+                .then(function (r) { return r.json(); })
+                .then(function (data) {
+                    if (data && typeof data.value === 'number') {
+                        animateCount(data.value);
+                        localStorage.setItem(LS_KEY, data.value);
+                    } else {
+                        localFallback();
+                    }
+                })
+                .catch(localFallback);
+        });
+})();
